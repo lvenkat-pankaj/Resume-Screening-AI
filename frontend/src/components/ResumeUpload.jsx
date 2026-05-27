@@ -209,84 +209,116 @@ export default function ResumeUpload() {
         .form-section {
           text-align: center;
           margin-bottom: 40px;
-          background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.8) 100%);
-          padding: 30px;
-          border-radius: 12px;
-          box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+          background: linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(248,249,255,0.95) 100%);
+          padding: 40px;
+          border-radius: 16px;
+          box-shadow: 0 8px 32px rgba(102, 126, 234, 0.2), 0 2px 8px rgba(0, 0, 0, 0.1);
           backdrop-filter: blur(10px);
+          border: 2px solid rgba(102, 126, 234, 0.15);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .form-section::before {
+          content: '';
+          position: absolute;
+          top: -50%;
+          right: -10%;
+          width: 300px;
+          height: 300px;
+          background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="rgba(240,147,251,0.1)"/><circle cx="50" cy="50" r="30" fill="rgba(100,200,255,0.08)"/><circle cx="50" cy="50" r="20" fill="rgba(102,126,234,0.06)"/></svg>') no-repeat;
+          background-size: contain;
+          pointer-events: none;
         }
 
         .form-section h2 {
           margin: 0 0 10px;
-          color: #667eea;
-          font-size: 28px;
-          font-weight: 700;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          font-size: 32px;
+          font-weight: 800;
+          position: relative;
+          z-index: 1;
         }
 
         .subtitle {
-          color: #666;
+          color: #555;
           margin: 0;
-          font-size: 15px;
-          opacity: 0.85;
+          font-size: 16px;
+          opacity: 0.9;
+          font-weight: 500;
+          position: relative;
+          z-index: 1;
         }
 
         .form-group {
-          margin-bottom: 24px;
-          background: rgba(255, 255, 255, 0.8);
-          padding: 20px;
-          border-radius: 10px;
-          border: 2px solid rgba(102, 126, 234, 0.1);
+          margin-bottom: 26px;
+          background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 255, 0.9) 100%);
+          padding: 24px;
+          border-radius: 12px;
+          border: 2px solid rgba(102, 126, 234, 0.15);
           transition: all 0.3s ease;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         .form-group:hover {
-          border-color: rgba(102, 126, 234, 0.3);
-          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.08);
+          border-color: rgba(240, 147, 251, 0.4);
+          box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15), 0 2px 8px rgba(240, 147, 251, 0.1);
+          transform: translateY(-2px);
         }
 
         label {
           display: block;
-          margin-bottom: 10px;
-          font-weight: 600;
-          color: #333;
+          margin-bottom: 12px;
+          font-weight: 700;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
           font-size: 15px;
         }
 
         textarea {
           width: 100%;
-          padding: 14px 12px;
-          border: 2px solid #e0e0e0;
-          border-radius: 8px;
+          padding: 16px 14px;
+          border: 2px solid #e8e8ff;
+          border-radius: 10px;
           font-family: 'Monaco', 'Menlo', monospace;
           font-size: 14px;
           resize: vertical;
           transition: all 0.3s ease;
-          background: #fafafa;
+          background: linear-gradient(135deg, #fafbff 0%, #f8f9ff 100%);
         }
 
         textarea:focus {
           outline: none;
           border-color: #667eea;
           background: white;
-          box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.12);
+          box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15), 0 0 0 8px rgba(240, 147, 251, 0.05);
         }
 
         textarea::placeholder {
-          color: #999;
+          color: #bbb;
         }
 
         input[type="file"] {
-          padding: 10px;
-          border: 2px solid #e0e0e0;
-          border-radius: 8px;
+          padding: 12px;
+          border: 2px dashed #e8e8ff;
+          border-radius: 10px;
           width: 100%;
           cursor: pointer;
           transition: all 0.3s ease;
+          background: linear-gradient(135deg, #fafbff 0%, #f8f9ff 100%);
+          font-weight: 500;
+          color: #667eea;
         }
 
         input[type="file"]:hover {
           border-color: #667eea;
-          background: #f8f9ff;
+          background: linear-gradient(135deg, #f0f4ff 0%, #e8f1ff 100%);
+          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
         }
 
         small {
@@ -299,33 +331,41 @@ export default function ResumeUpload() {
 
         .btn-submit {
           width: 100%;
-          padding: 16px;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          padding: 18px;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+          background-size: 300% 300%;
           color: white;
           border: none;
-          border-radius: 8px;
-          font-size: 16px;
-          font-weight: 600;
+          border-radius: 10px;
+          font-size: 17px;
+          font-weight: 700;
           cursor: pointer;
           transition: all 0.3s ease;
-          box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+          box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
           text-transform: uppercase;
-          letter-spacing: 0.5px;
+          letter-spacing: 1px;
+          animation: gradientShiftBtn 3s ease infinite;
+        }
+
+        @keyframes gradientShiftBtn {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
         }
 
         .btn-submit:hover:not(:disabled) {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+          transform: translateY(-3px) scale(1.02);
+          box-shadow: 0 12px 30px rgba(102, 126, 234, 0.5);
         }
 
         .btn-submit:active:not(:disabled) {
-          transform: translateY(0);
+          transform: translateY(-1px);
         }
 
         .btn-submit:disabled {
-          background: #ccc;
+          background: linear-gradient(135deg, #ccc 0%, #999 100%);
           cursor: not-allowed;
-          box-shadow: none;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
           opacity: 0.7;
         }
 

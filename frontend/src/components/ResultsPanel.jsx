@@ -238,64 +238,98 @@ export default function ResultsPanel({ results, onReset }) {
 
         .results-header h2 {
           margin: 0;
-          color: #667eea;
-          font-size: 32px;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          font-size: 36px;
+          font-weight: 800;
         }
 
         .btn-reset {
-          padding: 12px 28px;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          padding: 14px 32px;
+          background: linear-gradient(135deg, #f093fb 0%, #764ba2 50%, #667eea 100%);
           color: white;
           border: none;
-          border-radius: 8px;
+          border-radius: 10px;
           cursor: pointer;
-          font-weight: 600;
+          font-weight: 700;
           transition: all 0.3s ease;
-          box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+          box-shadow: 0 6px 20px rgba(240, 147, 251, 0.4);
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          font-size: 14px;
         }
 
         .btn-reset:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+          transform: translateY(-3px) scale(1.02);
+          box-shadow: 0 10px 28px rgba(240, 147, 251, 0.5);
         }
 
         .match-banner {
           display: flex;
           align-items: center;
           gap: 30px;
-          padding: 30px;
-          border-radius: 12px;
-          margin-bottom: 30px;
+          padding: 40px;
+          border-radius: 14px;
+          margin-bottom: 32px;
           color: white;
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
           position: relative;
           overflow: hidden;
         }
 
         .match-banner.matched {
-          background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+          background: linear-gradient(135deg, #10b981 0%, #059669 50%, #34d399 100%);
+          background-size: 200% 200%;
+          animation: matchGlow 3s ease infinite;
+        }
+
+        @keyframes matchGlow {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
         }
 
         .match-banner.matched::before {
           content: '✓';
           position: absolute;
-          top: -20px;
-          right: -20px;
-          font-size: 100px;
-          opacity: 0.1;
+          top: -30px;
+          right: -30px;
+          font-size: 120px;
+          opacity: 0.15;
+          animation: pulse 2s ease-in-out infinite;
         }
 
         .match-banner.not-matched {
-          background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+          background: linear-gradient(135deg, #ef4444 0%, #dc2626 50%, #f87171 100%);
+          background-size: 200% 200%;
+          animation: rejectGlow 3s ease infinite;
+        }
+
+        @keyframes rejectGlow {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
         }
 
         .match-banner.not-matched::before {
           content: '✕';
           position: absolute;
-          top: -20px;
-          right: -20px;
-          font-size: 100px;
-          opacity: 0.1;
+          top: -30px;
+          right: -30px;
+          font-size: 120px;
+          opacity: 0.15;
+          animation: shake 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.1); }
+        }
+
+        @keyframes shake {
+          0%, 100% { transform: translateX(0) rotateZ(0); }
+          25% { transform: translateX(-5px) rotateZ(-2deg); }
+          75% { transform: translateX(5px) rotateZ(2deg); }
         }
 
         .score-display {
@@ -331,26 +365,46 @@ export default function ResultsPanel({ results, onReset }) {
         }
 
         .result-section {
-          background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.9) 100%);
-          border: 2px solid rgba(102, 126, 234, 0.15);
-          border-radius: 12px;
-          padding: 28px;
-          margin-bottom: 24px;
-          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.08);
+          background: linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(248,250,255,0.95) 100%);
+          border: 2px solid rgba(102, 126, 234, 0.2);
+          border-radius: 14px;
+          padding: 32px;
+          margin-bottom: 28px;
+          box-shadow: 0 6px 20px rgba(102, 126, 234, 0.12);
           backdrop-filter: blur(10px);
           transition: all 0.3s ease;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .result-section::before {
+          content: '';
+          position: absolute;
+          top: -50%;
+          right: -10%;
+          width: 250px;
+          height: 250px;
+          background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="rgba(240,147,251,0.06)"/></svg>') no-repeat;
+          background-size: contain;
+          pointer-events: none;
         }
 
         .result-section:hover {
-          border-color: rgba(102, 126, 234, 0.3);
-          box-shadow: 0 6px 16px rgba(102, 126, 234, 0.12);
+          border-color: rgba(240, 147, 251, 0.4);
+          box-shadow: 0 10px 30px rgba(102, 126, 234, 0.18);
+          transform: translateY(-2px);
         }
 
         .result-section h3 {
           margin-top: 0;
-          color: #667eea;
-          font-size: 20px;
-          font-weight: 600;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          font-size: 22px;
+          font-weight: 700;
+          position: relative;
+          z-index: 1;
         }
 
         .info-grid {
@@ -395,24 +449,32 @@ export default function ResultsPanel({ results, onReset }) {
         }
 
         .tag {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+          background-size: 200% 200%;
           color: white;
-          padding: 8px 14px;
-          border-radius: 20px;
-          font-size: 12px;
-          font-weight: 500;
-          box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+          padding: 9px 16px;
+          border-radius: 25px;
+          font-size: 13px;
+          font-weight: 600;
+          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
           transition: all 0.3s ease;
+          animation: tagGlow 3s ease infinite;
+        }
+
+        @keyframes tagGlow {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
         }
 
         .tag:hover {
-          transform: scale(1.05);
-          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+          transform: scale(1.08) translateY(-2px);
+          box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
         }
 
         .tag.red {
-          background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-          box-shadow: 0 2px 8px rgba(239, 68, 68, 0.2);
+          background: linear-gradient(135deg, #ef4444 0%, #dc2626 50%, #f87171 100%);
+          background-size: 200% 200%;
+          box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
         }
 
         .list {
