@@ -1,9 +1,9 @@
 // Resume Upload Form Component
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { screenResume } from "../api/client";
 import PIIAlert from "./PIIAlert";
-import WorkflowStatus from "./WorkflowStatus";
+import LoadingIndicator from "./LoadingIndicator";
 import ResultsPanel from "./ResultsPanel";
 
 export default function ResumeUpload() {
@@ -13,6 +13,17 @@ export default function ResumeUpload() {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState(null);
   const [error, setError] = useState(null);
+  const [loadingTimeout, setLoadingTimeout] = useState(false);
+
+  useEffect(() => {
+    let timeoutId;
+    if (loading) {
+      timeoutId = setTimeout(() => {
+        setLoadingTimeout(true);
+      }, 45000);
+    }
+    return () => clearTimeout(timeoutId);
+  }, [loading]);
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -40,24 +51,41 @@ export default function ResumeUpload() {
       return;
     }
 
+    if (resume.trim().length < 100) {
+      setError("Resume must be at least 100 characters");
+      return;
+    }
+
     setLoading(true);
+    setLoadingTimeout(false);
     setError(null);
     setResults(null);
+    setPIIAlert(null);
 
     const result = await screenResume(resume, jobDescription);
 
-    if (result.success) {
-      setResults(result);
-    } else if (result.error === "PII_DETECTED") {
-      setPIIAlert({
-        detectedPII: result.detectedPII,
-        instruction: result.instruction,
-      });
-    } else {
-      setError(result.message);
+    setLoading(false);
+    setLoadingTimeout(false);
+
+    if (!result.success) {
+      if (result.code === "PII_DETECTED" || result.error === "PII_DETECTED") {
+        setPIIAlert({
+          detectedPII: result.detectedPII || [],
+          instruction: result.instruction || "Please remove the detected personal information and try again.",
+        });
+      } else if (result.error === "REQUEST_TIMEOUT" || result.error === "NETWORK_ERROR") {
+        setError(result.message + " Try with a shorter resume or check your internet connection.");
+      } else {
+        setError(result.message || "An error occurred. Please try again.");
+      }
+      return;
     }
 
-    setLoading(false);
+    if (result.workflow && result.summary) {
+      setResults(result);
+    } else {
+      setError("Received incomplete response from server. Please try again.");
+    }
   };
 
   if (piiAlert) {
@@ -133,9 +161,18 @@ export default function ResumeUpload() {
         </button>
       </form>
 
-      {loading && <WorkflowStatus />}
+      {loading && (
+        <div className="loading-overlay">
+          <LoadingIndicator step={loading ? 1 : 0} totalSteps={3} />
+          {loadingTimeout && (
+            <div className="timeout-warning">
+              <p>⏱️ This is taking longer than expected. Please wait a bit longer or try with a shorter resume.</p>
+            </div>
+          )}
+        </div>
+      )}
 
-      <style jsx="true">{`
+      <style jsx>{`
         .upload-container {
           max-width: 800px;
           margin: 0 auto;
@@ -225,6 +262,36 @@ export default function ResumeUpload() {
           border-radius: 4px;
           margin: 15px 0;
           border-left: 4px solid #c62828;
+        }
+
+        .loading-overlay {
+          background: rgba(0, 0, 0, 0.5);
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+        }
+
+        .timeout-warning {
+          background: #fff3cd;
+          color: #856404;
+          border: 1px solid #ffc107;
+          border-radius: 4px;
+          padding: 12px 16px;
+          margin-top: 20px;
+          text-align: center;
+          max-width: 400px;
+          font-size: 14px;
+        }
+
+        .timeout-warning p {
+          margin: 0;
         }
       `}</style>
     </div>

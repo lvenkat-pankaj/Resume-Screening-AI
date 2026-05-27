@@ -2,9 +2,34 @@
 // Displays the complete screening results
 
 export default function ResultsPanel({ results, onReset }) {
+  if (!results || !results.workflow || !results.summary) {
+    return (
+      <div className="error-container">
+        <h2>❌ Invalid Results</h2>
+        <p>Received incomplete data from server.</p>
+        <button onClick={onReset} className="btn-reset">
+          Try Again
+        </button>
+      </div>
+    );
+  }
+
   const { workflow, summary } = results;
-  const { step1_extraction, decision, step2_generation } = workflow;
-  const isMatched = decision.matched;
+  const { step1_extraction: extraction, decision, step2_generation: generation } = workflow;
+
+  if (!extraction || !decision || !generation) {
+    return (
+      <div className="error-container">
+        <h2>❌ Missing Data</h2>
+        <p>Some required data is missing from the response.</p>
+        <button onClick={onReset} className="btn-reset">
+          Try Again
+        </button>
+      </div>
+    );
+  }
+
+  const isMatched = decision.matched === true;
 
   return (
     <div className="results-container">
@@ -36,40 +61,52 @@ export default function ResultsPanel({ results, onReset }) {
           <div className="info-card">
             <h4>Skills</h4>
             <div className="tags">
-              {step1_extraction.skills.map((skill, idx) => (
-                <span key={idx} className="tag">
-                  {skill}
-                </span>
-              ))}
+              {Array.isArray(extraction.skills) && extraction.skills.length > 0 ? (
+                extraction.skills.map((skill, idx) => (
+                  <span key={idx} className="tag">
+                    {skill}
+                  </span>
+                ))
+              ) : (
+                <p className="no-data">No skills detected</p>
+              )}
             </div>
           </div>
 
           <div className="info-card">
             <h4>Experience</h4>
-            <p className="metric">{step1_extraction.experience_years} years</p>
+            <p className="metric">{extraction.experience_years} years</p>
           </div>
 
           <div className="info-card">
             <h4>Key Strengths</h4>
             <ul className="list">
-              {step1_extraction.strengths.map((strength, idx) => (
-                <li key={idx}>{strength}</li>
-              ))}
+              {Array.isArray(extraction.strengths) && extraction.strengths.length > 0 ? (
+                extraction.strengths.map((strength, idx) => (
+                  <li key={idx}>{strength}</li>
+                ))
+              ) : (
+                <li className="no-data">No strengths detected</li>
+              )}
             </ul>
           </div>
 
           <div className="info-card">
             <h4>Missing Skills</h4>
             <div className="tags gap-red">
-              {step1_extraction.missing_skills.map((skill, idx) => (
-                <span key={idx} className="tag red">
-                  {skill}
-                </span>
-              ))}
+              {Array.isArray(extraction.missing_skills) && extraction.missing_skills.length > 0 ? (
+                extraction.missing_skills.map((skill, idx) => (
+                  <span key={idx} className="tag red">
+                    {skill}
+                  </span>
+                ))
+              ) : (
+                <p className="no-data">No missing skills</p>
+              )}
             </div>
           </div>
         </div>
-        <p className="reason">{step1_extraction.match_reasons}</p>
+        <p className="reason">{extraction.match_reasons}</p>
       </div>
 
       {/* Step 2: Conditional Output */}
@@ -78,32 +115,40 @@ export default function ResultsPanel({ results, onReset }) {
           <>
             <h3>🎯 Interview Questions (Step 2 - Matched Path)</h3>
             <div className="questions-list">
-              {step2_generation.questions.map((question, idx) => (
-                <div key={idx} className="question-item">
-                  <span className="q-number">Q{idx + 1}</span>
-                  <p>{question}</p>
-                </div>
-              ))}
+              {Array.isArray(generation.questions) && generation.questions.length > 0 ? (
+                generation.questions.map((question, idx) => (
+                  <div key={idx} className="question-item">
+                    <span className="q-number">Q{idx + 1}</span>
+                    <p>{question || "(Empty question)"}</p>
+                  </div>
+                ))
+              ) : (
+                <p className="no-data">No interview questions generated</p>
+              )}
             </div>
-            <p className="difficulty">Difficulty Level: {step2_generation.difficulty}</p>
+            <p className="difficulty">Difficulty Level: {generation.difficulty || "Not specified"}</p>
           </>
         ) : (
           <>
             <h3>📝 Improvement Path (Step 2 - Not Matched)</h3>
             <div className="rejection-content">
               <p className="rejection-reason">
-                <strong>Why Not Matched:</strong> {step2_generation.rejection_reason}
+                <strong>Why Not Matched:</strong> {generation.rejection_reason || "No reason provided"}
               </p>
               <div className="suggestions">
                 <h4>Improvement Suggestions:</h4>
-                <ol>
-                  {step2_generation.improvement_suggestions.map((suggestion, idx) => (
-                    <li key={idx}>{suggestion}</li>
-                  ))}
-                </ol>
+                {Array.isArray(generation.improvement_suggestions) && generation.improvement_suggestions.length > 0 ? (
+                  <ol>
+                    {generation.improvement_suggestions.map((suggestion, idx) => (
+                      <li key={idx}>{suggestion || "(Empty suggestion)"}</li>
+                    ))}
+                  </ol>
+                ) : (
+                  <p className="no-data">No suggestions provided</p>
+                )}
               </div>
               <p className="reapply">
-                <strong>Time to Reapply:</strong> {step2_generation.time_to_reapply}
+                <strong>Time to Reapply:</strong> {generation.time_to_reapply || "Not specified"}
               </p>
             </div>
           </>
@@ -114,27 +159,69 @@ export default function ResultsPanel({ results, onReset }) {
       <div className="result-section">
         <h3>📋 Recruiter Summary (Step 3)</h3>
         <div className="summary-box">
-          <p>{summary.executive_summary}</p>
+          <p>{summary.executive_summary || "(No summary provided)"}</p>
         </div>
         <div className="summary-meta">
           <p>
             <strong>Recommendation:</strong>{" "}
-            <span className={`rec-badge ${summary.recommendation.toLowerCase()}`}>
-              {summary.recommendation.replace(/_/g, " ")}
+            <span className={`rec-badge ${(summary.recommendation || "").toLowerCase()}`}>
+              {(summary.recommendation || "No recommendation").replace(/_/g, " ")}
             </span>
           </p>
           <div className="next-steps">
             <h4>Next Steps:</h4>
-            <ol>
-              {summary.next_steps.map((step, idx) => (
-                <li key={idx}>{step}</li>
-              ))}
-            </ol>
+            {Array.isArray(summary.next_steps) && summary.next_steps.length > 0 ? (
+              <ol>
+                {summary.next_steps.map((step, idx) => (
+                  <li key={idx}>{step || "(Empty step)"}</li>
+                ))}
+              </ol>
+            ) : (
+              <p className="no-data">No next steps provided</p>
+            )}
           </div>
         </div>
       </div>
 
       <style jsx>{`
+        .error-container {
+          max-width: 1000px;
+          margin: 0 auto;
+          padding: 40px 20px;
+          text-align: center;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        .error-container h2 {
+          color: #d32f2f;
+          margin: 0 0 15px;
+        }
+
+        .error-container p {
+          color: #666;
+          margin: 0 0 20px;
+        }
+
+        .btn-reset {
+          padding: 10px 20px;
+          background: #4caf50;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          font-weight: 600;
+        }
+
+        .btn-reset:hover {
+          background: #45a049;
+        }
+
+        .no-data {
+          color: #999;
+          font-style: italic;
+          margin: 10px 0;
+        }
+
         .results-container {
           max-width: 1000px;
           margin: 0 auto;
