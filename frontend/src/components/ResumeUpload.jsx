@@ -176,96 +176,178 @@ export default function ResumeUpload() {
         .upload-container {
           max-width: 800px;
           margin: 0 auto;
-          padding: 20px;
+          padding: 40px 20px;
           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+          position: relative;
+        }
+
+        .upload-container::before {
+          content: '';
+          position: absolute;
+          top: -100px;
+          left: -50px;
+          width: 400px;
+          height: 400px;
+          background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240"><defs><linearGradient id="paperGrad" x1="0%25" y1="0%25" x2="100%25" y2="100%25"><stop offset="0%25" style="stop-color:rgba(102,126,234,0.2)"/><stop offset="100%25" style="stop-color:rgba(118,75,162,0.1)"/></linearGradient></defs><g transform="translate(10,10)"><rect x="20" y="20" width="160" height="200" rx="10" fill="url(%23paperGrad)" stroke="rgba(102,126,234,0.3)" stroke-width="2"/><circle cx="50" cy="50" r="12" fill="rgba(102,126,234,0.2)"/><line x1="70" y1="45" x2="170" y2="45" stroke="rgba(102,126,234,0.2)" stroke-width="2"/><line x1="70" y1="65" x2="170" y2="65" stroke="rgba(102,126,234,0.2)" stroke-width="2"/><line x1="30" y1="95" x2="170" y2="95" stroke="rgba(102,126,234,0.15)" stroke-width="2"/><line x1="30" y1="115" x2="170" y2="115" stroke="rgba(102,126,234,0.15)" stroke-width="2"/><line x1="30" y1="135" x2="170" y2="135" stroke="rgba(102,126,234,0.15)" stroke-width="2"/><line x1="30" y1="155" x2="140" y2="155" stroke="rgba(102,126,234,0.15)" stroke-width="2"/><g transform="translate(50, 180)"><circle cx="0" cy="0" r="5" fill="rgba(102,126,234,0.2)"/><circle cx="20" cy="0" r="5" fill="rgba(102,126,234,0.2)"/><circle cx="40" cy="0" r="5" fill="rgba(102,126,234,0.2)"/></g></g></svg>') no-repeat;
+          background-size: contain;
+          opacity: 0.5;
+          pointer-events: none;
+          animation: float-resume 8s ease-in-out infinite;
+          z-index: 0;
+        }
+
+        @keyframes float-resume {
+          0%, 100% { transform: translateY(0px) rotate(-8deg); }
+          50% { transform: translateY(-40px) rotate(-2deg); }
+        }
+
+        .upload-container form {
+          position: relative;
+          z-index: 1;
         }
 
         .form-section {
           text-align: center;
-          margin-bottom: 30px;
+          margin-bottom: 40px;
+          background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.8) 100%);
+          padding: 30px;
+          border-radius: 12px;
+          box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+          backdrop-filter: blur(10px);
         }
 
         .form-section h2 {
           margin: 0 0 10px;
-          color: #1976d2;
+          color: #667eea;
+          font-size: 28px;
+          font-weight: 700;
         }
 
         .subtitle {
           color: #666;
           margin: 0;
+          font-size: 15px;
+          opacity: 0.85;
         }
 
         .form-group {
-          margin-bottom: 20px;
+          margin-bottom: 24px;
+          background: rgba(255, 255, 255, 0.8);
+          padding: 20px;
+          border-radius: 10px;
+          border: 2px solid rgba(102, 126, 234, 0.1);
+          transition: all 0.3s ease;
+        }
+
+        .form-group:hover {
+          border-color: rgba(102, 126, 234, 0.3);
+          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.08);
         }
 
         label {
           display: block;
-          margin-bottom: 8px;
+          margin-bottom: 10px;
           font-weight: 600;
           color: #333;
+          font-size: 15px;
         }
 
         textarea {
           width: 100%;
-          padding: 12px;
-          border: 1px solid #ddd;
-          border-radius: 4px;
-          font-family: monospace;
+          padding: 14px 12px;
+          border: 2px solid #e0e0e0;
+          border-radius: 8px;
+          font-family: 'Monaco', 'Menlo', monospace;
           font-size: 14px;
           resize: vertical;
+          transition: all 0.3s ease;
+          background: #fafafa;
         }
 
         textarea:focus {
           outline: none;
-          border-color: #1976d2;
-          box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+          border-color: #667eea;
+          background: white;
+          box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.12);
+        }
+
+        textarea::placeholder {
+          color: #999;
         }
 
         input[type="file"] {
-          padding: 8px;
+          padding: 10px;
+          border: 2px solid #e0e0e0;
+          border-radius: 8px;
+          width: 100%;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        input[type="file"]:hover {
+          border-color: #667eea;
+          background: #f8f9ff;
         }
 
         small {
           display: block;
           color: #999;
-          margin-top: 4px;
-          font-size: 12px;
+          margin-top: 8px;
+          font-size: 13px;
+          font-weight: 500;
         }
 
         .btn-submit {
           width: 100%;
-          padding: 12px;
-          background: #1976d2;
+          padding: 16px;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
           color: white;
           border: none;
-          border-radius: 4px;
+          border-radius: 8px;
           font-size: 16px;
           font-weight: 600;
           cursor: pointer;
-          transition: background 0.2s;
+          transition: all 0.3s ease;
+          box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
         }
 
         .btn-submit:hover:not(:disabled) {
-          background: #1565c0;
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-submit:active:not(:disabled) {
+          transform: translateY(0);
         }
 
         .btn-submit:disabled {
           background: #ccc;
           cursor: not-allowed;
+          box-shadow: none;
+          opacity: 0.7;
         }
 
         .error-message {
-          background: #ffebee;
+          background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
           color: #c62828;
-          padding: 12px;
-          border-radius: 4px;
-          margin: 15px 0;
-          border-left: 4px solid #c62828;
+          padding: 16px;
+          border-radius: 8px;
+          margin: 20px 0;
+          border-left: 5px solid #c62828;
+          font-weight: 500;
+          animation: shake 0.3s ease;
+        }
+
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          25% { transform: translateX(-5px); }
+          75% { transform: translateX(5px); }
         }
 
         .loading-overlay {
-          background: rgba(0, 0, 0, 0.5);
+          background: rgba(0, 0, 0, 0.6);
           position: fixed;
           top: 0;
           left: 0;
@@ -276,18 +358,21 @@ export default function ResumeUpload() {
           align-items: center;
           justify-content: center;
           z-index: 1000;
+          backdrop-filter: blur(4px);
         }
 
         .timeout-warning {
-          background: #fff3cd;
+          background: linear-gradient(135deg, #fff3cd 0%, #ffe082 100%);
           color: #856404;
-          border: 1px solid #ffc107;
-          border-radius: 4px;
-          padding: 12px 16px;
-          margin-top: 20px;
+          border: 2px solid #ffc107;
+          border-radius: 8px;
+          padding: 16px 20px;
+          margin-top: 25px;
           text-align: center;
-          max-width: 400px;
+          max-width: 450px;
           font-size: 14px;
+          font-weight: 500;
+          box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
         }
 
         .timeout-warning p {
