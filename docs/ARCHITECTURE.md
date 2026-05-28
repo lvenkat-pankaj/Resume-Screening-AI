@@ -49,13 +49,13 @@ Production-grade full-stack AI application using Hugging Face Inference APIs for
 │  │ └──────────────────────────────────────────────┘    │   │
 │  │                     ↓                                │   │
 │  │ ┌──────────────────────────────────────────────┐    │   │
-│  │ │ LLM Call 2: Generate Response                │    │   │
+│  │ │ LLM Call 2: Generate Response (Llama-3.1-8B)│    │   │
 │  │ │                                              │    │   │
-│  │ │ PATH A (Matched): DeepSeek-V4-Pro            │    │   │
+│  │ │ PATH A (Matched): Interview Questions        │    │   │
 │  │ │   Input: skills, match_reason                │    │   │
 │  │ │   Output: Technical interview questions      │    │   │
 │  │ │                                              │    │   │
-│  │ │ PATH B (Not Matched): OpenHermes-2.5         │    │   │
+│  │ │ PATH B (Not Matched): Rejection Guidance     │    │   │
 │  │ │   Input: missing_skills, strengths           │    │   │
 │  │ │   Output: Rejection guidance + suggestions   │    │   │
 │  │ └──────────────────────────────────────────────┘    │   │
@@ -77,14 +77,13 @@ Production-grade full-stack AI application using Hugging Face Inference APIs for
 └─────────────────────────────────────────────────────────────┘
                             ↓
 ┌─────────────────────────────────────────────────────────────┐
-│         Hugging Face Inference APIs (via Novita)            │
+│       Hugging Face Inference APIs (via router.huggingface.co) │
 │  • Real-time inference                                      │
 │  • No local model hosting                                   │
 │  • Scalable & production-ready                              │
-│  • Three optimized models:                                  │
-│    - Llama-3.1-8B-Instruct (extraction & summary)            │
-│    - DeepSeek-V4-Pro (interview questions)                   │
-│    - OpenHermes-2.5-Mistral-7B (rejection guidance)          │
+│  • Model Used:                                              │
+│    - Llama-3.1-8B-Instruct (all steps: extraction,           │
+│      interview generation, rejection guidance, summary)     │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -172,13 +171,13 @@ ELSE (score < 70):
 
 #### LLM Call 2A: Interview Path (match_score ≥ 70%)
 ```
-Model: DeepSeek-V4-Pro
+Model: Llama-3.1-8B-Instruct
 Input:
   - skills: ["Node.js", "React", "TypeScript", "AWS"]
   - match_reason: "Strong full-stack experience..."
 
 Prompt Template:
-  "Generate 5 advanced technical interview questions
+  "Generate 5-10 advanced technical interview questions
    for candidate with these skills: ...
    Return ONLY JSON with 'questions' array."
 
@@ -189,15 +188,15 @@ Output (JSON):
     "Explain SQL vs NoSQL trade-offs...",
     "How would you optimize this API for latency?",
     "Walk through your most complex project...",
-    "Describe your approach to system design..."
-  ],
-  "difficulty": "advanced"
+    "Describe your approach to system design...",
+    "..." (5-10 total)
+  ]
 }
 ```
 
 #### LLM Call 2B: Rejection Path (match_score < 70%)
 ```
-Model: OpenHermes-2.5-Mistral-7B
+Model: Llama-3.1-8B-Instruct
 Input:
   - missing_skills: ["Cloud Architecture", "DevOps"]
   - strengths: ["Frontend Dev", "JavaScript"]
@@ -206,7 +205,7 @@ Prompt Template:
   "Candidate did not meet requirements.
    Missing: Cloud Architecture, DevOps
    But has: Frontend Dev, JavaScript
-   Provide constructive feedback and 3 improvement suggestions."
+   Provide constructive feedback and 2-10 improvement suggestions."
 
 Output (JSON):
 {

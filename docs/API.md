@@ -3,7 +3,7 @@
 ## Base URL
 
 ```
-http://localhost:5000
+http://localhost:5001
 ```
 
 ## Endpoints
@@ -26,7 +26,7 @@ Screens a resume and returns AI-powered analysis with 3 LLM calls.
 
 **Example Request:**
 ```bash
-curl -X POST http://localhost:5000/api/screen \
+curl -X POST http://localhost:5001/api/screen \
   -H "Content-Type: application/json" \
   -d '{
     "resume": "Senior Software Engineer with 8 years of experience in Node.js and React. Strong background in system design and team leadership.",
@@ -201,7 +201,7 @@ Health check endpoint.
 
 **Request:**
 ```bash
-curl http://localhost:5000/health
+curl http://localhost:5001/health
 ```
 
 **Response:**
@@ -417,7 +417,7 @@ Currently not implemented. Will be added before production deployment.
 
 ### JavaScript/Node.js
 ```javascript
-const response = await fetch('http://localhost:5000/api/screen', {
+const response = await fetch('http://localhost:5001/api/screen', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
@@ -442,7 +442,7 @@ if (data.success) {
 ```python
 import requests
 
-response = requests.post('http://localhost:5000/api/screen', json={
+response = requests.post('http://localhost:5001/api/screen', json={
     'resume': 'Senior Engineer with 8 years...',
     'jobDescription': 'Optional job description'
 })
@@ -457,7 +457,7 @@ else:
 
 ### cURL
 ```bash
-curl -X POST http://localhost:5000/api/screen \
+curl -X POST http://localhost:5001/api/screen \
   -H "Content-Type: application/json" \
   -d '{
     "resume": "Senior Engineer...",

@@ -39,13 +39,13 @@ cp .env.example .env
 HF_TOKEN=hf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 # Server port
-PORT=5000
+PORT=5001
 
 # Environment
 NODE_ENV=development
 
 # CORS origins (for frontend dev)
-ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
+ALLOWED_ORIGINS=http://localhost:5173
 ```
 
 ### Install Additional Dependencies
@@ -64,9 +64,9 @@ npm start
 
 Expected output:
 ```
-🚀 Resume Screening API running on http://localhost:5000
-📝 POST http://localhost:5000/api/screen
-✅ Health check: http://localhost:5000/health
+🚀 Resume Screening API running on http://localhost:5001
+📝 POST http://localhost:5001/api/screen
+✅ Health check: http://localhost:5001/health
 ```
 
 ## Step 4: Frontend Setup
@@ -77,18 +77,9 @@ cd frontend
 npm install
 ```
 
-### Configure Frontend Environment (Optional)
-```bash
-cp .env.example .env
-```
+### Environment Configuration (Optional)
 
-The frontend uses Vite environment variables (prefixed with `VITE_`):
-```env
-# Backend API URL (defaults to http://localhost:5000 if not set)
-VITE_API_URL=http://localhost:5000
-```
-
-**Note**: For local development, you typically don't need to create `.env` - the default is already set to `http://localhost:5000`.
+Frontend uses relative URLs for API calls, routed through Vite's dev proxy. No `.env` configuration needed for local development - the proxy automatically routes `/api` calls to `http://localhost:5001`.
 
 ### Start Frontend
 ```bash
@@ -97,21 +88,21 @@ npm run dev
 
 Expected output:
 ```
-  VITE v5.0.0  ready in 500 ms
+  VITE v5.4.21  ready in 500 ms
 
-  ➜  Local:   http://localhost:3000
+  ➜  Local:   http://localhost:5173
   ➜  press h to show help
 ```
 
 ## Step 5: Test the Application
 
 ### Browser
-1. Open http://localhost:3000
+1. Open http://localhost:5173
 2. You should see the Resume Screening AI interface
 
 ### API Health Check
 ```bash
-curl http://localhost:5000/health
+curl http://localhost:5001/health
 ```
 
 Expected response:
@@ -141,14 +132,14 @@ npm test
 ## Testing with Sample Resume
 
 ### Using Frontend
-1. Navigate to http://localhost:3000
+1. Navigate to http://localhost:5173
 2. Paste content from `tests/fixtures/sample-resumes/resume-strong.txt`
 3. Click "Screen Resume"
 4. View results
 
 ### Using cURL
 ```bash
-curl -X POST http://localhost:5000/api/screen \
+curl -X POST http://localhost:5001/api/screen \
   -H "Content-Type: application/json" \
   -d '{
     "resume": "Senior Software Engineer with 8 years of experience in Node.js and React.",
@@ -165,9 +156,9 @@ cat backend/.env | grep HF_TOKEN
 ```
 
 ### Issue: CORS Error in Browser
-**Solution**: Verify ALLOWED_ORIGINS in .env matches your frontend URL
+**Solution**: Verify ALLOWED_ORIGINS in .env includes frontend URL
 ```env
-ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
+ALLOWED_ORIGINS=http://localhost:5173
 ```
 
 ### Issue: LLM API Returns Invalid JSON
@@ -180,9 +171,9 @@ DEBUG=* npm run dev
 
 ### Issue: Frontend Can't Connect to Backend
 **Solution**: 
-1. Verify backend is running on port 5000
-2. Check proxy config in `frontend/vite.config.js`
-3. Verify CORS is enabled on backend
+1. Verify backend is running on port 5001
+2. Check proxy config in `frontend/vite.config.js` points to http://localhost:5001
+3. Verify CORS is enabled on backend with correct ALLOWED_ORIGINS
 
 ### Issue: API Timeout (>60 seconds)
 **Solution**: First LLM call can take 10-30 seconds
